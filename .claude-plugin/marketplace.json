@@ -1,0 +1,14 @@
+{
+  "name": "glovebox",
+  "description": "glovebox: drive iOS Simulators from Claude Code.",
+  "owner": {
+    "name": "Andy Becker"
+  },
+  "plugins": [
+    {
+      "name": "glovebox",
+      "source": "./",
+      "description": "Drive iOS Simulators: screen, accessibility tree, touches, keys, buttons, and opt-in lldb debugging."
+    }
+  ]
+}

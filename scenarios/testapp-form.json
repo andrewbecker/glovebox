@@ -1,0 +1,9 @@
+[
+  {"launch_app": {"bundle_id": "dev.glovebox.TestApp"}},
+  {"tap": {"label": "Form"}},
+  {"type_text": {"identifier": "name", "text": "Ada"}},
+  {"tap": {"label": "Notifications"}},
+  {"tap": {"identifier": "Increment"}},
+  {"tap": {"label": "Submit"}},
+  {"wait_for": {"identifier": "result"}}
+]

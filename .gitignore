@@ -1,0 +1,16 @@
+# Build output
+.build/
+.swiftpm/
+*.xcodeproj
+DerivedData/
+TestApp/build/
+*.xcresult
+
+# Per-machine and per-user files
+.DS_Store
+xcuserdata/
+.vscode/
+.idea/
+*.swp
+.claude/settings.local.json
+CLAUDE.local.md

@@ -1,0 +1,9 @@
+[
+  {"press_button": {"button": "home"}},
+  {"launch_app": {"bundle_id": "com.apple.Preferences"}},
+  {"scroll_to": {"label": "General"}},
+  {"tap": {"label": "General"}},
+  {"wait_for": {"label": "About"}},
+  {"tap": {"label": "About"}},
+  {"wait_for": {"identifier": "SW_VERSION_SPECIFIER"}}
+]

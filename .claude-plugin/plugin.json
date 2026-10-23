@@ -1,0 +1,14 @@
+{
+  "name": "glovebox",
+  "version": "0.2.0",
+  "description": "Drive iOS Simulators from Claude Code: see the screen, read the accessibility tree, tap, type and scroll, and (opt-in) debug the app with lldb.",
+  "author": { "name": "Andy Becker" },
+  "license": "MIT",
+  "keywords": ["ios", "simulator", "mcp", "testing", "xcode"],
+  "mcpServers": {
+    "glovebox": {
+      "command": "${HOME}/.local/bin/glovebox-mcp",
+      "args": ["serve", "--stdio"]
+    }
+  }
+}

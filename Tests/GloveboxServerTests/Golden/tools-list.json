@@ -1,0 +1,1221 @@
+[
+  {
+    "description" : "List available iOS/watchOS/tvOS simulators with UDID, name, runtime and state. Booted devices are listed first.",
+    "inputSchema" : {
+      "properties" : {
+        "booted_only" : {
+          "description" : "Only return booted simulators.",
+          "type" : "boolean"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "list_devices"
+  },
+  {
+    "description" : "Boot a simulator and wait until it has finished booting. Also opens Xcode's Device Hub so the device is visible.",
+    "inputSchema" : {
+      "properties" : {
+        "open_device_hub" : {
+          "description" : "Open Device Hub (default true). glovebox itself needs no window.",
+          "type" : "boolean"
+        },
+        "udid" : {
+          "description" : "Simulator UDID from list_devices.",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "udid"
+      ],
+      "type" : "object"
+    },
+    "name" : "boot"
+  },
+  {
+    "description" : "Shut down a simulator.",
+    "inputSchema" : {
+      "properties" : {
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "shutdown"
+  },
+  {
+    "description" : "Erase all content and settings on a simulator. The simulator must be shut down.",
+    "inputSchema" : {
+      "properties" : {
+        "udid" : {
+          "description" : "Simulator UDID.",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "udid"
+      ],
+      "type" : "object"
+    },
+    "name" : "erase"
+  },
+  {
+    "description" : "Open a URL (web link or app deep link) on the simulator. Deep links are also the way to enter text type_text cannot. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "url" : {
+          "description" : "The URL to open.",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "url"
+      ],
+      "type" : "object"
+    },
+    "name" : "open_url"
+  },
+  {
+    "description" : "Switch the simulator between light and dark mode.",
+    "inputSchema" : {
+      "properties" : {
+        "appearance" : {
+          "enum" : [
+            "light",
+            "dark"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "appearance"
+      ],
+      "type" : "object"
+    },
+    "name" : "set_appearance"
+  },
+  {
+    "description" : "Install a prebuilt .app bundle (e.g. the build product from the Xcode MCP). glovebox does not build apps.",
+    "inputSchema" : {
+      "properties" : {
+        "app_path" : {
+          "description" : "Absolute path to the .app bundle.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "app_path"
+      ],
+      "type" : "object"
+    },
+    "name" : "install_app"
+  },
+  {
+    "description" : "Launch an installed app by bundle identifier and return its process ID once it is frontmost and its first screen has settled (or a system alert covers it). Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "arguments" : {
+          "description" : "Launch arguments.",
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "bundle_id" : {
+          "description" : "Bundle identifier, e.g. com.apple.Preferences.",
+          "type" : "string"
+        },
+        "environment" : {
+          "additionalProperties" : {
+            "type" : "string"
+          },
+          "description" : "Environment variables for the app (not DYLD_ ones).",
+          "type" : "object"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle_quiet_ms" : {
+          "description" : "How long the first screen must hold still (default 3500): cold launches pause over 2 s mid-transition.",
+          "type" : "number"
+        },
+        "terminate_existing" : {
+          "description" : "Terminate a running instance first (default true).",
+          "type" : "boolean"
+        },
+        "timeout_ms" : {
+          "description" : "How long to wait for the app (default 30000).",
+          "type" : "number"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "wait" : {
+          "description" : "Wait until the app is frontmost and settled (default true).",
+          "type" : "boolean"
+        }
+      },
+      "required" : [
+        "bundle_id"
+      ],
+      "type" : "object"
+    },
+    "name" : "launch_app"
+  },
+  {
+    "description" : "Terminate a running app.",
+    "inputSchema" : {
+      "properties" : {
+        "bundle_id" : {
+          "description" : "Bundle identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "bundle_id"
+      ],
+      "type" : "object"
+    },
+    "name" : "terminate_app"
+  },
+  {
+    "description" : "Uninstall an app.",
+    "inputSchema" : {
+      "properties" : {
+        "bundle_id" : {
+          "description" : "Bundle identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "bundle_id"
+      ],
+      "type" : "object"
+    },
+    "name" : "uninstall_app"
+  },
+  {
+    "description" : "List installed apps (bundle ID, name, type). User apps are listed first.",
+    "inputSchema" : {
+      "properties" : {
+        "include_system" : {
+          "description" : "Include system apps (default false).",
+          "type" : "boolean"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "list_apps"
+  },
+  {
+    "description" : "Capture the simulator screen. Interactions already attach one, so call this only to look again. At the default scale 1, coordinates read off the image can be passed to tap and swipe as they are. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels.",
+    "inputSchema" : {
+      "properties" : {
+        "format" : {
+          "description" : "Image format (default jpeg).",
+          "enum" : [
+            "jpeg",
+            "png"
+          ],
+          "type" : "string"
+        },
+        "quality" : {
+          "description" : "JPEG quality from 0 to 1 (default 0.8).",
+          "type" : "number"
+        },
+        "save_path" : {
+          "description" : "Also save the image to this new file, under $TMPDIR or /tmp. Never overwrites.",
+          "type" : "string"
+        },
+        "scale" : {
+          "description" : "Image pixels per point (default 1). 0.5 saves tokens; the device scale (e.g. 3) gives full resolution.",
+          "type" : "number"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "screenshot"
+  },
+  {
+    "description" : "Describe the frontmost app's UI from its accessibility tree: role, label, value, identifier and frame (x, y, width, height) for each element. Labels are printed byte for byte, so copy them exactly. Cheaper and more precise than a screenshot for finding things to tap. Content drawn by other processes (web pages, system alerts, the status bar) is found by hit-testing the screen. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels.",
+    "inputSchema" : {
+      "properties" : {
+        "format" : {
+          "description" : "compact (default): elements with text, an identifier or a control role, one per line. all: every element, indented by depth. json: the nested tree.",
+          "enum" : [
+            "compact",
+            "all",
+            "json"
+          ],
+          "type" : "string"
+        },
+        "include_web" : {
+          "description" : "Hit-test for content the tree walk misses: web views, alerts, the status bar (default true).",
+          "type" : "boolean"
+        },
+        "max_elements" : {
+          "description" : "Most elements to list (default 400, at most 2000).",
+          "type" : "integer"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "describe_ui"
+  },
+  {
+    "description" : "Describe the accessibility element at a point. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels.",
+    "inputSchema" : {
+      "properties" : {
+        "udid" : {
+          "type" : "string"
+        },
+        "x" : {
+          "description" : "X in points.",
+          "type" : "number"
+        },
+        "y" : {
+          "description" : "Y in points.",
+          "type" : "number"
+        }
+      },
+      "required" : [
+        "x",
+        "y"
+      ],
+      "type" : "object"
+    },
+    "name" : "describe_point"
+  },
+  {
+    "description" : "List the elements matching a query (every given field must match), numbered for the index argument of tap, type_text and the like. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels.",
+    "inputSchema" : {
+      "properties" : {
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "find_elements"
+  },
+  {
+    "description" : "Wait until an element matching the query appears (or, with gone, disappears), then for the screen to settle. Re-checks whenever the screen changes. The tool for content that loads. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "gone" : {
+          "description" : "Wait for the element to disappear instead (default false).",
+          "type" : "boolean"
+        },
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "timeout_ms" : {
+          "description" : "Fail after this long (default 10000).",
+          "type" : "number"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "wait_for"
+  },
+  {
+    "description" : "Tap at x/y, or where VoiceOver would on the element matching a query (every given field must match): its center, or the switch in a switch row. Several matches are refused with a numbered list; pass index to pick one. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "index" : {
+          "description" : "Which of several matches, numbered as find_elements does.",
+          "type" : "integer"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        },
+        "x" : {
+          "description" : "X in points.",
+          "type" : "number"
+        },
+        "y" : {
+          "description" : "Y in points.",
+          "type" : "number"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "tap"
+  },
+  {
+    "description" : "Touch and hold at x/y or on the element matching a query. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "duration_ms" : {
+          "description" : "How long to hold (default 1000).",
+          "type" : "number"
+        },
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "index" : {
+          "description" : "Which of several matches, numbered as find_elements does.",
+          "type" : "integer"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        },
+        "x" : {
+          "description" : "X in points.",
+          "type" : "number"
+        },
+        "y" : {
+          "description" : "Y in points.",
+          "type" : "number"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "long_press"
+  },
+  {
+    "description" : "Drag a finger across the screen: from_x/from_y to to_x/to_y, or a direction, the finger's motion (\"up\" brings content further down into view). To bring an element into view, use scroll_to. Coordinates are POINTS everywhere (a scale 1 screenshot has one pixel per point), never device pixels. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "direction" : {
+          "description" : "Swipe this way from the screen center, or from x/y.",
+          "enum" : [
+            "up",
+            "down",
+            "left",
+            "right"
+          ],
+          "type" : "string"
+        },
+        "distance" : {
+          "description" : "Fraction of the screen a direction swipe travels (default 0.5).",
+          "type" : "number"
+        },
+        "duration_ms" : {
+          "description" : "Default 300. Short swipes fling; long ones drag precisely.",
+          "type" : "number"
+        },
+        "from_x" : {
+          "description" : "Start X in points.",
+          "type" : "number"
+        },
+        "from_y" : {
+          "description" : "Start Y in points.",
+          "type" : "number"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "to_x" : {
+          "description" : "End X in points.",
+          "type" : "number"
+        },
+        "to_y" : {
+          "description" : "End Y in points.",
+          "type" : "number"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "x" : {
+          "description" : "Start X for a direction swipe.",
+          "type" : "number"
+        },
+        "y" : {
+          "description" : "Start Y for a direction swipe.",
+          "type" : "number"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "swipe"
+  },
+  {
+    "description" : "Swipe until the element matching a query is in view, clear of the nav and tab bars. Turns back once at the end of the list. direction is the finger's motion until the element is in the tree; then glovebox swipes toward it. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "direction" : {
+          "description" : "Finger motion while searching (default up: content further down).",
+          "enum" : [
+            "up",
+            "down",
+            "left",
+            "right"
+          ],
+          "type" : "string"
+        },
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "index" : {
+          "description" : "Which of several matches, numbered as find_elements does.",
+          "type" : "integer"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "max_swipes" : {
+          "description" : "Give up after this many swipes (default 10, at most 50).",
+          "type" : "integer"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "scroll_to"
+  },
+  {
+    "description" : "Press a hardware button. home returns to the home screen; lock (or side) toggles sleep; siri holds the side button; apple_pay double-presses it. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "button" : {
+          "enum" : [
+            "home",
+            "lock",
+            "side",
+            "siri",
+            "apple_pay"
+          ],
+          "type" : "string"
+        },
+        "duration_ms" : {
+          "description" : "Hold the button this long (default 100, the shortest press iOS registers).",
+          "type" : "number"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "button"
+      ],
+      "type" : "object"
+    },
+    "name" : "press_button"
+  },
+  {
+    "description" : "Shake the device (a UIKit shake event, as Device Hub sends), e.g. for shake-to-undo or a debug menu. Check the screenshot: nothing reports whether an app listened. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "shake"
+  },
+  {
+    "description" : "Set the hinge of a foldable such as iPhone Duo: 0 closes it, 180 opens it flat. It sweeps there in small steps, as a hand would; afterwards glovebox works with whichever panel shows content. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "angle" : {
+          "description" : "Hinge angle in degrees, from 0 (closed) to 180 (open flat).",
+          "type" : "number"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "angle"
+      ],
+      "type" : "object"
+    },
+    "name" : "fold"
+  },
+  {
+    "description" : "Type text into the focused field with the hardware keyboard. \\n and \\t type Return and Tab. Lines with characters outside the US keyboard layout (accents, emoji) are pasted instead. Pass an element query to tap a field first. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "index" : {
+          "description" : "Which of several matches, numbered as find_elements does.",
+          "type" : "integer"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "submit" : {
+          "description" : "Press Return after typing (default false).",
+          "type" : "boolean"
+        },
+        "text" : {
+          "description" : "Text to type.",
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "text"
+      ],
+      "type" : "object"
+    },
+    "name" : "type_text"
+  },
+  {
+    "description" : "Press a key, optionally several times and with modifiers. E.g. {\"key\":\"backspace\",\"repeat\":5} deletes five characters. Key names: return, escape, backspace, delete_forward, tab, space, left, right, up, down, home, end, page_up, page_down, f1-f12, a single character, or a hex HID usage like 0x2a. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "key" : {
+          "description" : "Key name.",
+          "type" : "string"
+        },
+        "modifiers" : {
+          "description" : "Modifiers to hold: cmd, shift, option, ctrl.",
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "repeat" : {
+          "description" : "Number of presses (default 1, at most 1000).",
+          "type" : "integer"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "key"
+      ],
+      "type" : "object"
+    },
+    "name" : "press_key"
+  },
+  {
+    "description" : "Press keys together: each goes down in order, then all are released in reverse. E.g. [\"cmd\",\"a\"] selects all, [\"cmd\",\"shift\",\"h\"] goes home, [\"option\",\"backspace\"] deletes a word, [\"cmd\",\"k\"] toggles the software keyboard. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "keys" : {
+          "description" : "Modifier and key names, e.g. [\"cmd\", \"c\"].",
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "keys"
+      ],
+      "type" : "object"
+    },
+    "name" : "key_chord"
+  },
+  {
+    "description" : "Hold a key down for a duration, then release it. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "duration_ms" : {
+          "description" : "How long to hold the key.",
+          "type" : "number"
+        },
+        "key" : {
+          "description" : "Key name.",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "key",
+        "duration_ms"
+      ],
+      "type" : "object"
+    },
+    "name" : "hold_key"
+  },
+  {
+    "description" : "Clear the focused text field (Cmd-A, then Backspace). Pass an element query to tap the field first. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "identifier" : {
+          "description" : "Exact identifier.",
+          "type" : "string"
+        },
+        "index" : {
+          "description" : "Which of several matches, numbered as find_elements does.",
+          "type" : "integer"
+        },
+        "label" : {
+          "description" : "Exact label.",
+          "type" : "string"
+        },
+        "label_contains" : {
+          "description" : "Label substring.",
+          "type" : "string"
+        },
+        "role" : {
+          "description" : "As describe_ui shows it, e.g. Button, StaticText, TextField, CheckBox (a switch).",
+          "type" : "string"
+        },
+        "screenshot" : {
+          "description" : "Attach a screenshot of the result (default true; false in batch steps).",
+          "type" : "boolean"
+        },
+        "settle" : {
+          "description" : "screen (default): wait for the screen to stop changing; ui: also for a stable accessibility tree; none: don't wait.",
+          "enum" : [
+            "screen",
+            "ui",
+            "none"
+          ],
+          "type" : "string"
+        },
+        "text_match" : {
+          "description" : "Substring of label, value, placeholder or identifier.",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Exact value.",
+          "type" : "string"
+        },
+        "value_contains" : {
+          "description" : "Value substring.",
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "clear_text"
+  },
+  {
+    "description" : "Read recent unified-log entries from the simulator (log show), newest kept when trimmed. Filter by bundle_id to get an app's own logs and its crash: that matches the app's binary, its subsystem, and messages naming it (a crashed app logs nothing itself; runningboardd names it).",
+    "inputSchema" : {
+      "properties" : {
+        "bundle_id" : {
+          "description" : "Only entries from this app, its subsystem, or naming it (e.g. its crash).",
+          "type" : "string"
+        },
+        "max_bytes" : {
+          "description" : "Return at most this much text, keeping the newest lines (default 40000, at most 200000).",
+          "type" : "integer"
+        },
+        "max_lines" : {
+          "description" : "Return at most this many of the newest lines.",
+          "type" : "integer"
+        },
+        "predicate" : {
+          "description" : "NSPredicate filter, e.g. subsystem == \"com.example.app\" AND messageType == error.",
+          "type" : "string"
+        },
+        "process" : {
+          "description" : "Only entries from this process name, e.g. the app's executable name.",
+          "type" : "string"
+        },
+        "since" : {
+          "description" : "How far back to read: 30s, 5m (default 30s, at most 10 minutes).",
+          "type" : "string"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "get_logs"
+  },
+  {
+    "description" : "Attach lldb (through Xcode's lldb-dap) to an app you installed. By default the app is relaunched under the debugger, so breakpoints passed here catch even its first screen; relaunch: false attaches to it as it runs. While the app is paused, input tools and describe_ui are refused (its screen is frozen). The session detaches after 10 minutes without a debug call, or when glovebox exits. System apps and apps already under Xcode's debugger are refused.",
+    "inputSchema" : {
+      "properties" : {
+        "breakpoints" : {
+          "description" : "Breakpoints to set before the app runs: \"File.swift:42\" or a function name.",
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "bundle_id" : {
+          "description" : "The app to debug.",
+          "type" : "string"
+        },
+        "pid" : {
+          "description" : "With relaunch: false, the process to attach to (default: the running instance).",
+          "type" : "integer"
+        },
+        "relaunch" : {
+          "description" : "Relaunch the app waiting for the debugger (default true).",
+          "type" : "boolean"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "bundle_id"
+      ],
+      "type" : "object"
+    },
+    "name" : "debug_attach"
+  },
+  {
+    "description" : "Set or remove a breakpoint in the attached app: \"File.swift:42\" (a file name or full path) or a function name such as \"MyView.save()\". Then drive the app to it and call debug_wait.",
+    "inputSchema" : {
+      "properties" : {
+        "at" : {
+          "description" : "\"File.swift:42\" or a function name.",
+          "type" : "string"
+        },
+        "condition" : {
+          "description" : "Stop only when this expression is true, e.g. count > 3.",
+          "type" : "string"
+        },
+        "remove" : {
+          "description" : "Remove the breakpoint instead (default false).",
+          "type" : "boolean"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "at"
+      ],
+      "type" : "object"
+    },
+    "name" : "debug_breakpoint"
+  },
+  {
+    "description" : "Wait for the attached app to stop (a breakpoint, a crash or an exception) and show where: the reason and the top of the stack. Returns at once if it is already paused. Send the input that reaches the breakpoint first; an input tool returns once the screen goes still, which a paused app's screen does.",
+    "inputSchema" : {
+      "properties" : {
+        "timeout_ms" : {
+          "description" : "How long to wait (default 30000, at most 300000).",
+          "type" : "number"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "debug_wait"
+  },
+  {
+    "description" : "Evaluate an expression in the paused app (e.g. self.items.count), or run an lldb command (e.g. po self, bt, frame variable).",
+    "inputSchema" : {
+      "properties" : {
+        "expression" : {
+          "description" : "A Swift or Objective-C expression, or an lldb command.",
+          "type" : "string"
+        },
+        "frame" : {
+          "description" : "Stack frame to evaluate in, 0 being the innermost (default 0).",
+          "type" : "integer"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "expression"
+      ],
+      "type" : "object"
+    },
+    "name" : "debug_evaluate"
+  },
+  {
+    "description" : "Resume the paused app. Breakpoints stay set.",
+    "inputSchema" : {
+      "properties" : {
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "debug_continue"
+  },
+  {
+    "description" : "Detach the debugger, leaving the app running.",
+    "inputSchema" : {
+      "properties" : {
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "type" : "object"
+    },
+    "name" : "debug_detach"
+  },
+  {
+    "description" : "Run several steps in one call, in order. Each step is an object with one key, the tool name, whose value is that tool's arguments, e.g. [{\"tap\":{\"label\":\"Email\"}}, {\"type_text\":{\"text\":\"me@example.com\"}}, {\"tap\":{\"identifier\":\"loginButton\"}}, {\"wait_for\":{\"label\":\"Welcome\"}}]. Any tool except batch can be a step (scroll_to and wait_for are the usual ways to reach and wait for things), plus {\"capture\":{\"path\":\"/tmp/step.jpg\"}} to save a screenshot under a temp folder, and {\"sleep\":{\"ms\":N}} as an escape hatch. Up to 20 steps. Each named element is looked up again right before its step and must hold still before it is tapped; an x/y tap is allowed only as the first step, where the coordinates are fresh. The first failing step stops the batch. The result lists each step and ends with a screenshot of the final screen. udid applies to every step. Returns once the screen settles, with a screenshot: do NOT sleep or poll before the next step.",
+    "inputSchema" : {
+      "properties" : {
+        "screenshot" : {
+          "description" : "Attach a screenshot of the final screen (default true).",
+          "type" : "boolean"
+        },
+        "steps" : {
+          "description" : "Steps to run, e.g. [{\"tap\":{\"x\":100,\"y\":200}}].",
+          "items" : {
+            "type" : "object"
+          },
+          "type" : "array"
+        },
+        "stop_on_error" : {
+          "description" : "Stop at the first failing step (default true).",
+          "type" : "boolean"
+        },
+        "udid" : {
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "steps"
+      ],
+      "type" : "object"
+    },
+    "name" : "batch"
+  }
+]
